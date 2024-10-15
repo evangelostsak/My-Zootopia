@@ -29,11 +29,12 @@ def print_animal_info(animals_data):
         for animal_data in animals_data:
             # append information to each string
             output += '<li class="cards__item">'
-            output += f"Name: {animal_data['name']}<br/>\n"
-            output += f"Diet: {animal_data['characteristics']['diet']}<br/>\n"
-            output += f"Location: {animal_data['locations'][0]}<br/>\n"
+            output += f'<div class="card__title">{animal_data['name']}</div><br/>\n'
+            output += '<p class="card__text">'
+            output += f"<strong>Diet</strong>: {animal_data['characteristics']['diet']}<br/>\n"
+            output += f"<strong>Location</strong>: {animal_data['locations'][0]}<br/>\n"
             if 'type' in animal_data['characteristics']:  # getting type only if available
-                output += f"Type: {animal_data['characteristics'].get('type')}<br/>\n"
+                output += f"<strong>Type</strong>: {animal_data['characteristics'].get('type')}<br/>\n"
             output += '</li>'
 
         return output
