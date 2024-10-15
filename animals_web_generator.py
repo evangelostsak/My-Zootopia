@@ -2,6 +2,7 @@ import json
 
 
 def load_data(file_path):
+    """Loader for json file"""
     try:
         with open(file_path, "r") as file:
             return json.load(file)
@@ -10,28 +11,39 @@ def load_data(file_path):
         return None
 
 
+def load_data_html(file_path):
+    """Loader for html file"""
+    try:
+        with open(file_path, "r") as file:
+            data = file.read()
+            return data
+    except FileNotFoundError:
+        print(f"File named '{file_path}' was not found")
+        return None
+
+
 def print_animal_info(animals_data):
 
     if animals_data is not None:
+        output = ""
+        for animal_data in animals_data:
+            # append information to each string
+            output += f"Name: {animal_data['name']}\n"
+            output += f"Diet: {animal_data['characteristics']['diet']}\n"
+            output += f"Location: {animal_data['locations'][0]}\n"
+            if 'type' in animal_data['characteristics']:  # getting type only if available
+                output += f"Type: {animal_data['characteristics'].get('type')}\n"
 
-        for animal in animals_data:
-            name = animal["name"]
-            diet = animal["characteristics"]["diet"]
-            location = animal["locations"][0]
-            type_ = animal["characteristics"].get("type") # Solves the problem with traceback errors.
-
-            if type_:
-                # Printing the extracted information
-                print(f"Name: {name}")
-                print(f"Diet: {diet}")
-                print(f"Location Primary: {location}")
-                print(f"Type: {type_}\n")
-            else:
-                print(f"Name: {name}")
-                print(f"Diet: {diet}")
-                print(f"Location Primary: {location}\n")
+        return output
 
 
-animals_info = load_data('animals_data.json')
+animals_info = load_data('animals_data.json')  # Loading animals info from json file
+html_data = load_data_html('animals_template.html')  # #Loading old template from old html file
 
-print_animal_info(animals_info)
+new_html_file = html_data.replace('__REPLACE_ANIMALS_INFO__', print_animal_info(animals_info))
+"""Replacing old template with new string containing animal info
+saving it in a variable for further use."""
+
+with open("animals.html", "w") as file0bj:
+    # writing the new html data into a new html file
+    file0bj.write(new_html_file)
