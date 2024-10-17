@@ -1,14 +1,16 @@
 import json
+import requests
 
 
-def load_data(file_path):
-    """Loader for json file"""
-    try:
-        with open(file_path, "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        print(f"File named '{file_path}' was not found")
-        return None
+def get_animal_info_api(animal):
+    api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(animal)
+
+    response = requests.get(api_url, headers={'X-Api-Key': 'yDM/hllrax2UOLR6bqaiFQ==UOGJ66wUKFT0FkNH'})
+
+    if response.status_code == requests.codes.ok:
+        return response.json()
+    else:
+        print("Error:", response.status_code, response.json())
 
 
 def load_data_html(file_path):
@@ -40,7 +42,8 @@ def print_animal_info(animals_data):
         return output
 
 
-animals_info = load_data('animals_data.json')  # Loading animals info from json file
+#user_input = input("Please enter animals Name: ")
+animals_info = get_animal_info_api("Fox")  # Loading animals info from json file
 html_data = load_data_html('animals_template.html')  # #Loading old template from old html file
 
 new_html_file = html_data.replace('__REPLACE_ANIMALS_INFO__', print_animal_info(animals_info))
