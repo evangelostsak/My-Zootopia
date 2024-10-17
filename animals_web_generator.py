@@ -1,4 +1,3 @@
-import json
 import requests
 
 
@@ -42,8 +41,8 @@ def print_animal_info(animals_data):
         return output
 
 
-#user_input = input("Please enter animals Name: ")
-animals_info = get_animal_info_api("Fox")  # Loading animals info from json file
+user_input = input("Please enter the name of the animal: ")  # User input for animals name
+animals_info = get_animal_info_api(user_input)  # Loading animals info from the API
 html_data = load_data_html('animals_template.html')  # #Loading old template from old html file
 
 new_html_file = html_data.replace('__REPLACE_ANIMALS_INFO__', print_animal_info(animals_info))
@@ -53,3 +52,5 @@ saving it in a variable for further use."""
 with open("animals.html", "w") as file0bj:
     # writing the new html data into a new html file
     file0bj.write(new_html_file)
+
+print(f"\nWebsite was successfully generated to the file animals.html\n")
