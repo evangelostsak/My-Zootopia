@@ -1,22 +1,4 @@
-import requests
-
-
-def get_animal_info_api(animal):
-    """Fetches animal info from the API"""
-
-    api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(animal)  # API url targeting animals  name
-
-    # get request
-    response = requests.get(api_url, headers={'X-Api-Key': 'yDM/hllrax2UOLR6bqaiFQ==UOGJ66wUKFT0FkNH'})
-
-    if response.status_code == requests.codes.ok:  # if code green, proceed!
-        data = response.json()  # getting the response in json
-        if len(data) == 0:  # Missing animal error fix
-            return None
-        return data
-    else:
-        print("Error:", response.status_code, response.json())
-        return None
+import data_fetcher
 
 
 def load_data_html(file_path):
@@ -54,7 +36,7 @@ def main():
     """Main function"""
 
     user_input = input("Please enter the name of the animal: ")  # User input for animals name
-    animals_info = get_animal_info_api(user_input)  # Loading animals info from the API
+    animals_info = data_fetcher.fetch_data(user_input)  # Loading animals info from the API
     html_data = load_data_html('animals_template.html')  # #Loading old template from old html file
 
     new_html_file = html_data.replace('__REPLACE_ANIMALS_INFO__', print_animal_info(animals_info, user_input))
