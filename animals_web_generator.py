@@ -2,14 +2,21 @@ import requests
 
 
 def get_animal_info_api(animal):
-    api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(animal)
+    """Fetches animal info from the API"""
 
+    api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(animal)  # API url targeting animals  name
+
+    # get request
     response = requests.get(api_url, headers={'X-Api-Key': 'yDM/hllrax2UOLR6bqaiFQ==UOGJ66wUKFT0FkNH'})
 
-    if response.status_code == requests.codes.ok:
-        return response.json()
+    if response.status_code == requests.codes.ok:  # if code green, proceed!
+        data = response.json()  # getting the response in json
+        if len(data) == 0:  # Missing animal error fix
+            return None
+        return data
     else:
         print("Error:", response.status_code, response.json())
+        return None
 
 
 def load_data_html(file_path):
@@ -23,8 +30,7 @@ def load_data_html(file_path):
         return None
 
 
-def print_animal_info(animals_data):
-
+def print_animal_info(animals_data, animal_name):
     if animals_data is not None:
         output = ""
         for animal_data in animals_data:
@@ -39,18 +45,28 @@ def print_animal_info(animals_data):
             output += '</li>'
 
         return output
+    else:
+        # Friendly Error message if animal doesnt exist
+        return f"<h2>Oops! Unfortunately the animal '{animal_name}' doesn't exist.</h2>"
 
 
-user_input = input("Please enter the name of the animal: ")  # User input for animals name
-animals_info = get_animal_info_api(user_input)  # Loading animals info from the API
-html_data = load_data_html('animals_template.html')  # #Loading old template from old html file
+def main():
+    """Main function"""
 
-new_html_file = html_data.replace('__REPLACE_ANIMALS_INFO__', print_animal_info(animals_info))
-"""Replacing old template with new string containing animal info
-saving it in a variable for further use."""
+    user_input = input("Please enter the name of the animal: ")  # User input for animals name
+    animals_info = get_animal_info_api(user_input)  # Loading animals info from the API
+    html_data = load_data_html('animals_template.html')  # #Loading old template from old html file
 
-with open("animals.html", "w") as file0bj:
-    # writing the new html data into a new html file
-    file0bj.write(new_html_file)
+    new_html_file = html_data.replace('__REPLACE_ANIMALS_INFO__', print_animal_info(animals_info, user_input))
+    """Replacing old template with new string containing animal info
+    saving it in a variable for further use."""
 
-print(f"\nWebsite was successfully generated to the file animals.html\n")
+    with open("animals.html", "w") as file0bj:
+        # writing the new html data into a new html file
+        file0bj.write(new_html_file)
+
+    print(f"\nWebsite was successfully generated to the file animals.html\n")
+
+
+if __name__ == '__main__':
+    main()
